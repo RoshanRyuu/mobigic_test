@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobigic_tets/screens/slash_screen/spash_screen.dart';
+import 'package:mobigic_test/screens/slash_screen/spash_screen.dart';
 
 void main() {
   runApp(const MyApp());

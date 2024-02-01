@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:mobigic_tets/screens/components/common_text.dart';
+import 'package:mobigic_test/screens/components/common_text.dart';
 
 class CommonTextField extends StatelessWidget {
   final String? hintText;

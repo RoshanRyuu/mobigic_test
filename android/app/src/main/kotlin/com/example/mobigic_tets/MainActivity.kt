@@ -1,4 +1,4 @@
-package com.example.mobigic_tets
+package com.example.mobigic_test
 
 import io.flutter.embedding.android.FlutterActivity
 

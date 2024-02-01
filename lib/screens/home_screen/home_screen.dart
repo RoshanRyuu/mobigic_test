@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:mobigic_tets/controller/home_controller.dart';
-import 'package:mobigic_tets/screens/components/common_textfield.dart';
+import 'package:mobigic_test/controller/home_controller.dart';
+import 'package:mobigic_test/screens/components/common_textfield.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -16,7 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('2D Grid')),
+      appBar: AppBar(title: const Text('Home Page')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
