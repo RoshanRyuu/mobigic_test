@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:mobigic_tets/controller/home_controller.dart';
+import 'package:mobigic_tets/screens/components/common_textfield.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -23,37 +25,53 @@ class _HomeScreenState extends State<HomeScreen> {
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Enter number '),
+                  child: CommonTextField(
+                    keyBoardType: TextInputType.number,
+                    inputFormatters: [LengthLimitingTextInputFormatter(1)],
+                    labelText: 'Enter number',
                     onChanged: (value) {
                       int rows = int.tryParse(value) ?? 0;
                       homeCon.updateDimensions(rows, homeCon.n.value);
+                      homeCon.row.value = value;
                     },
                   ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: TextField(
-                    keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(labelText: 'Enter number'),
+                  child: CommonTextField(
+                    keyBoardType: TextInputType.number,
+                    inputFormatters: [LengthLimitingTextInputFormatter(1)],
+                    labelText: 'Enter number',
                     onChanged: (value) {
-                      int cols = int.tryParse(value) ?? 0;
-                      homeCon.updateDimensions(homeCon.m.value, cols);
+                      homeCon.col.value = value;
                     },
                   ),
                 ),
               ],
             ),
             const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                if (homeCon.row.isEmpty) {
+                  Get.snackbar("Error", "Please enter row digit");
+                } else if (homeCon.col.isEmpty) {
+                  Get.snackbar("Error", "Please enter column digit");
+                } else {
+                  int cols = int.tryParse(homeCon.col.value) ?? 0;
+                  homeCon.updateDimensions(homeCon.m.value, cols);
+                }
+              },
+              child: const Center(child: Text("Create Grid")),
+            ),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    controller: homeCon.searchTextController,
-                    decoration: const InputDecoration(labelText: 'Enter search text'),
+                  child: CommonTextField(
+                    con: homeCon.searchTextController,
+                    labelText: 'Enter search text',
                     onChanged: (value) {
-                      homeCon.searchText = value;
+                      homeCon.searchText.value = value;
                       homeCon.update();
                     },
                   ),
@@ -73,24 +91,22 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         itemCount: homeCon.m.value * homeCon.n.value,
                         itemBuilder: (context, index) {
+                          final int row = index ~/ homeCon.n.value;
+                          final int col = index % homeCon.n.value;
                           return Container(
-                            decoration: BoxDecoration(border: Border.all(color: Colors.black)),
-                            child: Center(
-                              child: Obx(
-                                () {
-                                  print(homeCon.controllers[index ~/ homeCon.n.value][index % homeCon.n.value].text
-                                      .contains(homeCon.searchTextController.text));
-                                  return Text(
-                                    homeCon.controllers[index ~/ homeCon.n.value][index % homeCon.n.value].text,
-                                    style: TextStyle(
-                                      fontWeight: homeCon
-                                              .controllers[index ~/ homeCon.n.value][index % homeCon.n.value].text
-                                              .contains(homeCon.searchTextController.text)
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                    ),
-                                  );
-                                },
+                            decoration: BoxDecoration(
+                              border: Border.all(),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Obx(
+                              () => Center(
+                                child: Text.rich(
+                                  TextSpan(
+                                    children: homeCon.highlightOccurrences(
+                                        homeCon.controllers[row][col].text, homeCon.searchText.value),
+                                    style: const TextStyle(color: Colors.grey),
+                                  ),
+                                ),
                               ),
                             ),
                           );
